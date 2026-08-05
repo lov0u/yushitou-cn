@@ -1,0 +1,381 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ============================================
+   听山 TIDGE — 侘寂美学 × 赛博极简
+   ============================================ */
+
+:root {
+  --void: #0a0a0b;
+  --carbon: #121214;
+  --ash: #1c1c1f;
+  --stone: #2a2a2e;
+  --moss: #5e8f7e;
+  --neon-jade: #7fdbb6;
+  --neon-glow: #5eead4;
+  --bone: #e8e6e3;
+  --dust: #9a9a9e;
+  --fade: #5a5a5e;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  background: var(--void);
+}
+
+body {
+  background: var(--void);
+  color: var(--bone);
+  font-family: "Inter", "Helvetica Neue", system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+}
+
+/* 滚动条 */
+::-webkit-scrollbar {
+  width: 4px;
+  height: 4px;
+}
+::-webkit-scrollbar-track {
+  background: var(--void);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--stone);
+  border-radius: 2px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--moss);
+}
+
+/* 选中文本 */
+::selection {
+  background: rgba(127, 219, 182, 0.2);
+  color: var(--neon-jade);
+}
+
+/* ============================================
+   工具类
+   ============================================ */
+
+/* 液态金属渐变文字 */
+.text-liquid {
+  background: linear-gradient(
+    90deg,
+    var(--dust) 0%,
+    var(--bone) 25%,
+    var(--neon-silver) 50%,
+    var(--bone) 75%,
+    var(--dust) 100%
+  );
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: shimmer 4s linear infinite;
+}
+
+/* 霓虹发光线 */
+.neon-line {
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    var(--neon-jade) 50%,
+    transparent 100%
+  );
+  box-shadow: 0 0 8px rgba(127, 219, 182, 0.4);
+}
+
+.neon-line-v {
+  width: 1px;
+  background: linear-gradient(
+    180deg,
+    transparent 0%,
+    var(--neon-jade) 50%,
+    transparent 100%
+  );
+  box-shadow: 0 0 8px rgba(127, 219, 182, 0.4);
+}
+
+/* 毛玻璃卡片 */
+.glass {
+  background: rgba(28, 28, 31, 0.6);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(127, 219, 182, 0.1);
+}
+
+.glass-hover {
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.glass-hover:hover {
+  background: rgba(28, 28, 31, 0.8);
+  border-color: rgba(127, 219, 182, 0.3);
+  box-shadow: 0 0 24px rgba(127, 219, 182, 0.08);
+}
+
+/* 发光节点 */
+.glow-node {
+  position: relative;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: var(--neon-jade);
+  box-shadow: 0 0 12px rgba(127, 219, 182, 0.6),
+    0 0 24px rgba(127, 219, 182, 0.3);
+}
+
+.glow-node::before {
+  content: "";
+  position: absolute;
+  inset: -4px;
+  border-radius: 50%;
+  border: 1px solid rgba(127, 219, 182, 0.2);
+  animation: glowPulse 2s ease-in-out infinite;
+}
+
+/* 竖排文字 */
+.vertical-text {
+  writing-mode: vertical-rl;
+  text-orientation: upright;
+  letter-spacing: 0.4em;
+}
+
+/* 打字机光标 */
+.typewriter-cursor {
+  display: inline-block;
+  width: 2px;
+  height: 1em;
+  background: var(--neon-jade);
+  margin-left: 4px;
+  vertical-align: text-bottom;
+  animation: blink 1s step-end infinite;
+}
+
+@keyframes blink {
+  0%, 50% { opacity: 1; }
+  51%, 100% { opacity: 0; }
+}
+
+/* 扫描线效果 */
+.scanline {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(127, 219, 182, 0.3),
+    transparent
+  );
+  pointer-events: none;
+  z-index: 9999;
+  animation: scan 6s linear infinite;
+}
+
+/* 网格背景 */
+.grid-bg {
+  background-image:
+    linear-gradient(rgba(42, 42, 46, 0.3) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(42, 42, 46, 0.3) 1px, transparent 1px);
+  background-size: 60px 60px;
+}
+
+/* 噪点纹理 */
+.noise::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  opacity: 0.03;
+  pointer-events: none;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* 按钮 */
+.btn-cyber {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.875rem 2rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--neon-jade);
+  background: transparent;
+  border: 1px solid rgba(127, 219, 182, 0.3);
+  overflow: hidden;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  cursor: pointer;
+}
+
+.btn-cyber::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(127, 219, 182, 0.1),
+    transparent
+  );
+  transform: translateX(-100%);
+  transition: transform 0.6s ease;
+}
+
+.btn-cyber:hover {
+  border-color: var(--neon-jade);
+  box-shadow: 0 0 20px rgba(127, 219, 182, 0.15);
+  color: var(--bone);
+}
+
+.btn-cyber:hover::before {
+  transform: translateX(100%);
+}
+
+/* 标签 */
+.tag-cyber {
+  display: inline-block;
+  padding: 4px 12px;
+  font-size: 0.75rem;
+  font-family: "JetBrains Mono", monospace;
+  letter-spacing: 0.1em;
+  color: var(--neon-jade);
+  border: 1px solid rgba(127, 219, 182, 0.2);
+  background: rgba(127, 219, 182, 0.05);
+}
+
+/* 分割线 */
+.divider-cyber {
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    var(--stone) 20%,
+    var(--stone) 80%,
+    transparent 100%
+  );
+}
+
+/* 数字编号 */
+.section-number {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 0.75rem;
+  color: var(--fade);
+  letter-spacing: 0.2em;
+}
+
+/* 大标题 */
+.heading-display {
+  font-size: clamp(3rem, 8vw, 7rem);
+  font-weight: 800;
+  line-height: 0.9;
+  letter-spacing: -0.04em;
+}
+
+.heading-section {
+  font-size: clamp(2rem, 5vw, 4rem);
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: -0.03em;
+}
+
+/* 宋体标题 */
+.heading-song {
+  font-family: "Noto Serif SC", "Songti SC", serif;
+  font-weight: 600;
+  letter-spacing: 0.15em;
+}
+
+/* 滚动渐入 */
+.reveal {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+}
+
+.reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* 玉石质感卡片 */
+.jade-card {
+  position: relative;
+  background: linear-gradient(135deg, var(--carbon) 0%, var(--ash) 100%);
+  border: 1px solid var(--stone);
+  overflow: hidden;
+  transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.jade-card::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(127, 219, 182, 0.05),
+    transparent
+  );
+  transition: left 0.8s ease;
+}
+
+.jade-card:hover {
+  border-color: rgba(127, 219, 182, 0.3);
+  transform: translateY(-4px);
+}
+
+.jade-card:hover::after {
+  left: 100%;
+}
+
+/* 链接hover */
+.link-cyber {
+  position: relative;
+  color: var(--dust);
+  transition: color 0.3s ease;
+}
+
+.link-cyber:hover {
+  color: var(--neon-jade);
+}
+
+.link-cyber::after {
+  content: "";
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 0;
+  height: 1px;
+  background: var(--neon-jade);
+  transition: width 0.3s ease;
+}
+
+.link-cyber:hover::after {
+  width: 100%;
+}
+
+/* 响应式 */
+@media (max-width: 768px) {
+  .heading-display {
+    font-size: clamp(2.5rem, 12vw, 4rem);
+  }
+  .heading-section {
+    font-size: clamp(1.75rem, 8vw, 2.5rem);
+  }
+}
