@@ -1,0 +1,17 @@
+# 听山 TIDGE
+
+> 听山 TIDGE 是一家位于烟台的玉石工艺品加工品牌，成立于2015年。精选和田玉、翡翠、南红玛瑙、绿松石等名贵玉料，以匠心工艺雕琢摆件、挂件、手镯、印章、把件等玉石工艺品，支持来料加工和专属定制。以侘寂之心对话千年玉道，用当代设计语言重塑传统工艺。
+
+## 主要页面
+- [首页](https://yushitou.cn/): 听山 TIDGE 官方网站，玉石工艺品加工品牌展示
+- [关于我们](https://yushitou.cn/about/): 听山 TIDGE 品牌故事、核心理念和企业介绍
+- [作品](https://yushitou.cn/works/): 玉石工艺品精选作品展示，含摆件、挂件、手镯、把件等
+- [工艺](https://yushitou.cn/craft/): 玉雕工艺流程详解，选料、设计、粗坯、细雕、打磨、抛光、配座
+- [玉石](https://yushitou.cn/jade/): 和田玉、翡翠、独山玉、岫玉、南红玛瑙、绿松石等玉料知识
+- [定制](https://yushitou.cn/custom/): 玉石工艺品专属定制服务，来料加工、个性化设计
+- [新闻资讯](https://yushitou.cn/articles/): 玉石知识、雕刻工艺、鉴赏指南、行业动态
+- [联系我们](https://yushitou.cn/contact/): 联系方式和地址
+
+## 站点信息
+- [网站地图](https://yushitou.cn/sitemap.xml): XML 格式站点地图
+- [robots.txt](https://yushitou.cn/robots.txt): 爬虫访问规则

@@ -101,6 +101,13 @@ export default function Footer() {
             >
               青衣网络
             </a>
+            <span className="text-stone">|</span>
+            <Link
+              href="/sitemap.xml"
+              className="text-fade hover:text-neon-jade transition-colors"
+            >
+              网站地图
+            </Link>
           </div>
         </div>
       </div>

@@ -1,14 +1,50 @@
+import { notFound } from "next/navigation";
 import Link from "next/link";
-import { getArticles } from "@/lib/strapi";
+import type { Metadata } from "next";
+import { getArticlesByTag, getAllTagSlugs } from "@/lib/strapi";
+import { companyInfo } from "@/lib/data";
 
-export const metadata = {
-  title: "资讯 / ARTICLES — 听山 TIDGE",
-  description:
-    "听山 TIDGE 资讯：玉石知识、雕刻工艺、鉴赏指南、行业动态。深入了解和田玉、翡翠等名贵玉料的文化与价值。",
-};
+export const revalidate = 3600;
 
-export default async function ArticlesPage() {
-  const { articles } = await getArticles();
+export async function generateStaticParams() {
+  const slugs = await getAllTagSlugs();
+  return slugs.map((slug) => ({ slug }));
+}
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}): Promise<Metadata> {
+  const { slug } = await params;
+  const { tag } = await getArticlesByTag(slug);
+
+  if (!tag) {
+    return {
+      title: "标签未找到 — 听山 TIDGE",
+    };
+  }
+
+  return {
+    title: `标签: ${tag.name} — 听山 TIDGE`,
+    description: `浏览${companyInfo.name}「${tag.name}」标签下的所有文章`,
+    alternates: {
+      canonical: `https://${companyInfo.domain}/tags/${tag.slug}/`,
+    },
+  };
+}
+
+export default async function TagArticlesPage({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}) {
+  const { slug } = await params;
+  const { articles, total, tag } = await getArticlesByTag(slug);
+
+  if (!tag) {
+    notFound();
+  }
 
   return (
     <div className="min-h-screen bg-void">
@@ -21,12 +57,29 @@ export default async function ArticlesPage() {
         <div className="pointer-events-none absolute -left-32 bottom-0 h-80 w-80 rounded-full bg-neon-jade/5 blur-[100px]" />
 
         <div className="relative z-10 mx-auto max-w-[1400px] px-6 pb-20 pt-24 lg:px-12 lg:pb-28 lg:pt-32">
+          {/* 面包屑 */}
+          <nav className="mb-8 flex items-center gap-3 text-xs">
+            <Link href="/" className="link-cyber font-mono">
+              首页
+            </Link>
+            <span className="text-fade">/</span>
+            <Link href="/articles" className="link-cyber font-mono">
+              资讯
+            </Link>
+            <span className="text-fade">/</span>
+            <Link href="/tags" className="link-cyber font-mono">
+              标签
+            </Link>
+            <span className="text-fade">/</span>
+            <span className="font-mono text-dust">{tag.name}</span>
+          </nav>
+
           {/* 顶部标签行 */}
           <div className="flex items-center gap-4">
-            <span className="tag-cyber">ARTICLES</span>
+            <span className="tag-cyber">TAG</span>
             <span className="h-px w-12 bg-stone" />
             <span className="font-mono text-[10px] tracking-[0.3em] text-fade">
-              JADE KNOWLEDGE & INSIGHTS
+              {total} ARTICLES
             </span>
           </div>
 
@@ -34,21 +87,18 @@ export default async function ArticlesPage() {
           <div className="mt-10 grid grid-cols-1 gap-8 lg:grid-cols-12 lg:gap-8">
             <div className="lg:col-span-8">
               <h1 className="heading-display text-bone">
-                资讯
-                <span className="text-fade"> /</span>
-                <span className="text-liquid"> ARTICLES</span>
+                {tag.name}
               </h1>
             </div>
             <div className="flex flex-col justify-end lg:col-span-4">
               <div className="mb-4 flex items-center gap-3">
                 <span className="neon-line w-12" />
                 <span className="font-mono text-[10px] tracking-[0.3em] text-fade">
-                  KNOWLEDGE OF JADE
+                  FILTERED BY TAG
                 </span>
               </div>
               <p className="max-w-sm font-sans text-sm leading-relaxed text-dust">
-                玉石知识、雕刻工艺、鉴赏指南、行业动态。
-                在这里，深入了解玉的文化与价值。
+                共 {total} 篇相关文章，持续更新中。
               </p>
             </div>
           </div>
@@ -70,22 +120,21 @@ export default async function ArticlesPage() {
               {/* 标题行 */}
               <div className="mb-14 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
                 <div>
-                  <span className="section-number">01 / LATEST</span>
+                  <span className="section-number">01 / TAGGED</span>
                   <h2 className="heading-section mt-3 text-bone">
-                    最新文章
+                    「{tag.name}」相关文章
                   </h2>
                 </div>
                 <p className="max-w-sm text-sm leading-relaxed text-dust">
-                  共 {articles.length} 篇文章，持续更新中。
+                  共 {articles.length} 篇文章。
                 </p>
               </div>
 
               {/* 文章列表 */}
               <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
                 {articles.map((article, i) => (
-                  <Link
+                  <article
                     key={article.id}
-                    href={`/articles/${article.slug}/`}
                     className="jade-card glass-hover group flex flex-col"
                   >
                     {/* 封面图 */}
@@ -97,9 +146,7 @@ export default async function ArticlesPage() {
                           loading="lazy"
                           className="h-full w-full object-cover opacity-70 transition-all duration-700 group-hover:scale-105 group-hover:opacity-95"
                         />
-                        {/* 渐变遮罩 */}
                         <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-void/80 via-transparent to-transparent" />
-                        {/* 编号 */}
                         <div className="absolute left-4 top-4">
                           <span className="font-mono text-xs tracking-[0.2em] text-neon-jade">
                             A{String(i + 1).padStart(2, "0")}
@@ -141,7 +188,7 @@ export default async function ArticlesPage() {
                         </span>
                       </div>
                     </div>
-                  </Link>
+                  </article>
                 ))}
               </div>
             </>
@@ -150,13 +197,13 @@ export default async function ArticlesPage() {
               {/* 标题行 */}
               <div className="mb-14 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
                 <div>
-                  <span className="section-number">01 / COMING SOON</span>
+                  <span className="section-number">01 / EMPTY</span>
                   <h2 className="heading-section mt-3 text-bone">
-                    最新文章
+                    暂无文章
                   </h2>
                 </div>
                 <p className="max-w-sm text-sm leading-relaxed text-dust">
-                  资讯栏目正在筹备中，敬请期待。
+                  该标签下暂无文章内容。
                 </p>
               </div>
 
@@ -164,31 +211,31 @@ export default async function ArticlesPage() {
               <div className="glass relative flex min-h-[400px] flex-col items-center justify-center p-12 text-center">
                 <div className="pointer-events-none absolute inset-0 grid-bg opacity-20" />
 
-                {/* 装饰节点 */}
                 <div className="relative z-10 mb-8">
                   <div className="glow-node mx-auto" />
                 </div>
 
                 <span className="relative z-10 font-mono text-[10px] tracking-[0.3em] text-fade">
-                  // COMING SOON
+                  // NO ARTICLES
                 </span>
 
                 <h3 className="relative z-10 mt-6 heading-song text-3xl text-bone lg:text-4xl">
-                  文章即将上线
+                  暂无文章
                 </h3>
 
                 <p className="relative z-10 mt-4 max-w-md text-sm leading-relaxed text-dust">
-                  我们正在精心筹备玉石知识、雕刻工艺、鉴赏指南等内容，
-                  很快就会与大家见面，敬请期待。
+                  该标签下暂无文章内容，请浏览其他标签或全部文章。
                 </p>
 
-                {/* 底部装饰线 */}
-                <div className="relative z-10 mt-10 flex w-full max-w-xs items-center gap-4">
-                  <span className="neon-line flex-1" />
-                  <span className="font-mono text-[10px] tracking-[0.3em] text-fade">
-                    TIDGE
-                  </span>
-                  <span className="neon-line flex-1" />
+                <div className="relative z-10 mt-10 flex flex-col items-center justify-center gap-6 sm:flex-row">
+                  <Link href="/articles" className="btn-cyber">
+                    浏览全部文章
+                    <span className="ml-1">→</span>
+                  </Link>
+
+                  <Link href="/tags" className="link-cyber font-mono text-sm tracking-[0.2em]">
+                    查看全部标签 →
+                  </Link>
                 </div>
               </div>
             </>
@@ -197,38 +244,31 @@ export default async function ArticlesPage() {
       </section>
 
       {/* ============================================
-          3. 底部返回首页
+          3. 底部返回
           ============================================ */}
       <section className="relative w-full overflow-hidden bg-carbon noise">
-        {/* 背景光晕 */}
         <div className="pointer-events-none absolute left-1/2 top-1/2 h-[500px] w-[500px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-moss-400/10 blur-[140px]" />
         <div className="pointer-events-none absolute inset-0 grid-bg opacity-30" />
 
         <div className="relative z-10 mx-auto max-w-[1000px] px-6 py-24 text-center lg:px-12 lg:py-32">
-          <span className="section-number">// BACK · 返回首页</span>
+          <span className="section-number">// BACK · 返回</span>
 
           <h2 className="heading-section mt-6 text-bone">
             探索更多
-            <span className="heading-song text-neon-jade"> 玉石之美</span>
+            <span className="heading-song text-neon-jade"> 标签</span>
           </h2>
 
-          <p className="mx-auto mt-6 max-w-2xl text-base leading-loose text-dust">
-            资讯栏目持续更新中。在等待的同时，
-            欢迎浏览我们的作品与工艺，感受玉石的魅力。
-          </p>
-
           <div className="mt-10 flex flex-col items-center justify-center gap-6 sm:flex-row">
-            <Link href="/" className="btn-cyber">
-              返回首页
+            <Link href="/tags" className="btn-cyber">
+              查看全部标签
               <span className="ml-1">→</span>
             </Link>
 
-            <Link href="/works" className="link-cyber font-mono text-sm tracking-[0.2em]">
-              查看作品 →
+            <Link href="/articles" className="link-cyber font-mono text-sm tracking-[0.2em]">
+              浏览全部文章 →
             </Link>
           </div>
 
-          {/* 底部装饰线 */}
           <div className="mx-auto mt-16 flex max-w-md items-center gap-4">
             <span className="neon-line flex-1" />
             <span className="font-mono text-[10px] tracking-[0.3em] text-fade">TIDGE</span>

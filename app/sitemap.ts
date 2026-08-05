@@ -1,69 +1,98 @@
 import type { MetadataRoute } from "next";
-import { getArticles } from "@/lib/strapi";
+import { getArticles, getTags } from "@/lib/strapi";
+
+export const revalidate = 3600;
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = "https://yushitou.cn";
+  const lastModified = new Date();
 
   /* 静态页面 */
   const staticPages: MetadataRoute.Sitemap = [
     {
       url: `${baseUrl}/`,
-      lastModified: new Date(),
+      lastModified,
       changeFrequency: "weekly",
       priority: 1.0,
     },
     {
-      url: `${baseUrl}/works`,
-      lastModified: new Date(),
+      url: `${baseUrl}/works/`,
+      lastModified,
       changeFrequency: "weekly",
       priority: 0.9,
     },
     {
-      url: `${baseUrl}/craft`,
-      lastModified: new Date(),
+      url: `${baseUrl}/craft/`,
+      lastModified,
       changeFrequency: "monthly",
       priority: 0.8,
     },
     {
-      url: `${baseUrl}/jade`,
-      lastModified: new Date(),
+      url: `${baseUrl}/jade/`,
+      lastModified,
       changeFrequency: "monthly",
       priority: 0.8,
     },
     {
-      url: `${baseUrl}/custom`,
-      lastModified: new Date(),
+      url: `${baseUrl}/custom/`,
+      lastModified,
       changeFrequency: "monthly",
       priority: 0.8,
     },
     {
-      url: `${baseUrl}/about`,
-      lastModified: new Date(),
+      url: `${baseUrl}/about/`,
+      lastModified,
       changeFrequency: "monthly",
       priority: 0.7,
     },
     {
-      url: `${baseUrl}/contact`,
-      lastModified: new Date(),
+      url: `${baseUrl}/contact/`,
+      lastModified,
       changeFrequency: "yearly",
       priority: 0.6,
     },
     {
-      url: `${baseUrl}/articles`,
-      lastModified: new Date(),
+      url: `${baseUrl}/articles/`,
+      lastModified,
       changeFrequency: "weekly",
       priority: 0.7,
     },
   ];
 
   /* 动态文章页面 */
-  const { articles } = await getArticles();
-  const articlePages: MetadataRoute.Sitemap = articles.map((article) => ({
-    url: `${baseUrl}/articles/${article.slug}`,
-    lastModified: new Date(article.publishedAt),
-    changeFrequency: "monthly" as const,
-    priority: 0.6,
-  }));
+  let articlePages: MetadataRoute.Sitemap = [];
+  try {
+    const { articles } = await getArticles(1, 100);
+    articlePages = articles.map((article) => ({
+      url: `${baseUrl}/articles/${article.slug}/`,
+      lastModified: new Date(article.publishedAt),
+      changeFrequency: "monthly" as const,
+      priority: 0.6,
+    }));
+  } catch {
+    // Strapi 未就绪时跳过
+  }
 
-  return [...staticPages, ...articlePages];
+  /* 标签页面 */
+  let tagPages: MetadataRoute.Sitemap = [];
+  try {
+    const tags = await getTags();
+    tagPages = tags.map((tag) => ({
+      url: `${baseUrl}/tags/${tag.slug}/`,
+      lastModified,
+      changeFrequency: "weekly" as const,
+      priority: 0.5,
+    }));
+    // 标签列表页
+    tagPages.push({
+      url: `${baseUrl}/tags/`,
+      lastModified,
+      changeFrequency: "weekly" as const,
+      priority: 0.5,
+    });
+  } catch {
+    // Strapi 未就绪时跳过
+  }
+
+  return [...staticPages, ...articlePages, ...tagPages];
 }
