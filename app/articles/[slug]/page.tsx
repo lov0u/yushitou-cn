@@ -5,7 +5,7 @@ import {
   getArticle,
   getAllArticleSlugs,
   getArticles,
-} from "@/lib/strapi";
+} from "@/lib/payload";
 import { companyInfo } from "@/lib/data";
 
 export const revalidate = 3600; // ISR

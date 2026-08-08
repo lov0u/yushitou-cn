@@ -1,7 +1,7 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import type { Metadata } from "next";
-import { getArticlesByTag, getAllTagSlugs } from "@/lib/strapi";
+import { getArticlesByTag, getAllTagSlugs } from "@/lib/payload";
 import { companyInfo } from "@/lib/data";
 
 export const revalidate = 3600;

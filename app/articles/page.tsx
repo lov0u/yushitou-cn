@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { getArticles } from "@/lib/strapi";
+import { getArticles } from "@/lib/payload";
 
 export const metadata = {
   title: "资讯 / ARTICLES — 听山 TIDGE",
