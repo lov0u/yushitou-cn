@@ -10,3 +10,5 @@ yushitou.cn 网站 - Next.js
 <!-- Fix cache - 2026-08-08 10:18:44 -->
 
 <!-- Fix Dockerfile - 2026-08-08 10:20:59 -->
+
+<!-- Fix tsconfig - 2026-08-08 10:22:47 -->
