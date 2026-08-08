@@ -1,6 +1,8 @@
 import Link from "next/link";
 import { getArticles } from "@/lib/payload";
 
+export const revalidate = 60; // ISR: 每分钟重新验证，保证新文章/配图快速可见
+
 export const metadata = {
   title: "资讯 / ARTICLES — 听山 TIDGE",
   description:
@@ -89,13 +91,13 @@ export default async function ArticlesPage() {
                     className="jade-card glass-hover group flex flex-col"
                   >
                     {/* 封面图 */}
-                    {article.coverImage && (
-                      <div className="relative aspect-[16/10] w-full overflow-hidden bg-ash">
+                    {article.coverImage ? (
+                      <div className="relative aspect-[21/9] w-full overflow-hidden bg-ash">
                         <img
                           src={article.coverImage}
                           alt={article.title}
                           loading="lazy"
-                          className="h-full w-full object-cover opacity-70 transition-all duration-700 group-hover:scale-105 group-hover:opacity-95"
+                          className="h-full w-full object-cover opacity-80 transition-all duration-300 group-hover:scale-105 group-hover:opacity-100"
                         />
                         {/* 渐变遮罩 */}
                         <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-void/80 via-transparent to-transparent" />
@@ -105,6 +107,12 @@ export default async function ArticlesPage() {
                             A{String(i + 1).padStart(2, "0")}
                           </span>
                         </div>
+                      </div>
+                    ) : (
+                      <div className="relative flex aspect-[21/9] w-full items-center justify-center overflow-hidden bg-ash">
+                        <span className="font-mono text-xs tracking-[0.2em] text-fade">
+                          A{String(i + 1).padStart(2, "0")}
+                        </span>
                       </div>
                     )}
 

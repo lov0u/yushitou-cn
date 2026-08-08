@@ -7,8 +7,9 @@ import {
   getArticles,
 } from "@/lib/payload";
 import { companyInfo } from "@/lib/data";
+import ArticleCharts from "@/app/ArticleCharts";
 
-export const revalidate = 3600; // ISR
+export const revalidate = 60; // ISR: 每分钟重新验证
 
 // 构建时预生成所有文章页
 export async function generateStaticParams() {
@@ -218,6 +219,8 @@ export default async function ArticlePage({
             dangerouslySetInnerHTML={{ __html: article.content }}
           />
 
+          <ArticleCharts />
+
           {/* 底部装饰线 */}
           <div className="mt-16 flex items-center gap-4">
             <span className="neon-line flex-1" />
@@ -288,7 +291,7 @@ export default async function ArticlePage({
                   >
                     {/* 封面图 */}
                     {relArticle.coverImage && (
-                      <div className="relative aspect-[16/10] w-full overflow-hidden bg-ash">
+                      <div className="relative aspect-[21/9] w-full overflow-hidden bg-ash">
                         <img
                           src={relArticle.coverImage}
                           alt={relArticle.title}

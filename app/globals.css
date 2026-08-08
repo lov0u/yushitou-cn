@@ -462,3 +462,68 @@ body {
   font-size: 0.875rem;
   color: var(--neon-jade, #7fdbb6);
 }
+
+/* 正文配图容器：统一 21:9 比例，避免图片过高；图片按 object-cover 填充 */
+.article-image {
+  aspect-ratio: 21 / 9;
+  overflow: hidden;
+  margin: 1.75rem 0;
+  border-radius: 0.5rem;
+  background: #1c1c1f;
+}
+.article-image img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  margin: 0;
+  border-radius: 0;
+}
+
+/* 正文表格（图表下方保留的语义化表格） */
+.article-content table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1.5rem 0;
+  font-size: 0.9rem;
+}
+.article-content th,
+.article-content td {
+  border: 1px solid #2a2a2e;
+  padding: 0.625rem 0.875rem;
+  text-align: left;
+  color: #9a9a9e;
+}
+.article-content th {
+  background: #1c1c1f;
+  font-weight: 600;
+  color: #e8e6e3;
+}
+
+/* 正文图表：前端 Chart.js 根据 table[data-chart] 渲染；原始 <table> 保留在 DOM 保证 SEO 可读 */
+.article-chart-wrap {
+  margin: 1.75rem 0;
+  padding: 1rem 1.25rem;
+  background: #121214;
+  border: 1px solid #2a2a2e;
+  border-radius: 0.5rem;
+}
+.article-chart-title {
+  font-weight: 600;
+  color: #e8e6e3;
+  margin-bottom: 0.75rem;
+  font-size: 0.95rem;
+}
+/* Chart.js 用 maintainAspectRatio:false，canvas 的直接父容器必须有确定高度 */
+.article-chart-canvas {
+  position: relative;
+  height: 320px;
+}
+.article-chart-canvas canvas {
+  width: 100% !important;
+  height: 100% !important;
+}
+@media (max-width: 640px) {
+  .article-chart-wrap { padding: 0.75rem; }
+  .article-chart-canvas { height: 260px; }
+}
