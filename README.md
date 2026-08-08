@@ -12,3 +12,5 @@ yushitou.cn 网站 - Next.js
 <!-- Fix Dockerfile - 2026-08-08 10:20:59 -->
 
 <!-- Fix tsconfig - 2026-08-08 10:22:47 -->
+
+<!-- Fix ACR name - 2026-08-08 10:35:16 -->
