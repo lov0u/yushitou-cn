@@ -192,18 +192,6 @@ export default async function ArticlePage({
               {companyInfo.name}
             </span>
           </div>
-
-          {/* 封面图 */}
-          {article.coverImage && (
-            <div className="relative mt-12 aspect-[16/9] w-full overflow-hidden bg-ash">
-              <img
-                src={article.coverImage}
-                alt={article.title}
-                className="h-full w-full object-cover opacity-80"
-              />
-              <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-void/60 via-transparent to-transparent" />
-            </div>
-          )}
         </div>
       </section>
 
