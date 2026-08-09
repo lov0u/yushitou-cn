@@ -2,6 +2,8 @@ import Link from "next/link";
 import { Fragment } from "react";
 import { works, craftSteps, categories, companyInfo } from "@/lib/data";
 
+export const revalidate = 60; // ISR: 每分钟重新验证，避免旧 HTML 缓存引用已清理的旧 chunk
+
 export default function HomePage() {
   const featuredWorks = works.slice(0, 3);
 
